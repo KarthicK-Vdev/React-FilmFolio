@@ -1,13 +1,15 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import MovieList from '../components/MovieList'
 import { RiFolderCloseLine } from "react-icons/ri";
-import {addNewMovie} from "../services/apiCalls"
+import {addNewMovie, getMovieYear} from "../services/apiCalls"
 
 const Movies = () => {
   const month=[1,2,3,4,5,6,7,8,9,10,11,12];
   const [addMovie, setAddMovie]=useState(false);
   const [releaseDate, setReleaseDate] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [movieYear, setMovieYear] = useState([])
+  const [yearDisplay, setYearDisplay] = useState(2024)
 
   const imageUrl=useRef()
   const movieName=useRef()
@@ -29,24 +31,38 @@ const Movies = () => {
         console.log(error)
       }
   }
+  useEffect(()=>{
+    const fetchMovieYear=async ()=>{
+      const {data}=await getMovieYear()
+      setMovieYear(data)
+    }
+    fetchMovieYear()
+  },[])
   
 
   const handleDateChange = (event) => {
     const dateValue = event.target.value; // In YYYY-MM-DD format
     setReleaseDate(dateValue);
 };
-
+  console.log(yearDisplay)
+  
   return (
     <>
     <div className='h-full w-full overflow-y-scroll '>
       <div className='m-2 h-[10%] flex justify-end'>
+        <div className='h-[80%] w-[100%] flex items-center'>{
+            movieYear.map((data, index)=>(
+              <button key={index} onClick={()=>setYearDisplay(data.year)} className='h-[100%] w-[10%] flex items-center justify-center mr-4 border-2 bg-yellow-100 text-yellow-700 border-yellow-400 rounded-md text-center'>{data.year}</button> 
+            ))
+          }
+        </div>
         <button className='h-[80%] w-[25%] border-2 border-white bg-black text-yellow-400 font-bold text-lg rounded-md hover:bg-white hover:text-yellow-400 hover:border-yellow-400 transition duration-300' onClick={()=>setAddMovie(!addMovie)}>Add a Movie</button>
       </div>
       {
         month.map((data, index)=>(
           <div key={index} className='flex flex-col'>
             <h1>month: {data}</h1>
-            <MovieList month={data-1} />
+            <MovieList month={data-1} year={yearDisplay} />
           </div>
         ))
       }

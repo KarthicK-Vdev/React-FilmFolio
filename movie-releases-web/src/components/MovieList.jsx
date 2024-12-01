@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MovieData } from '../Data/MovieData';
 import { getMovieList } from '../services/apiCalls';
 
-const MovieList = ({month}) => {
+const MovieList = ({month, year}) => {
   const convertDate = (releaseDate) => {
     const date = new Date(releaseDate);
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -24,7 +24,7 @@ const MovieList = ({month}) => {
 
   const monthMovies=movieList.filter((movie)=>{
     const date= new Date(movie.releaseDate)
-    return date.getMonth()===month
+    return date.getMonth()===month && date.getFullYear()===year
   })
   if(monthMovies.length==0)
   {

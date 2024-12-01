@@ -1,6 +1,7 @@
 const express = require("express")
 const route=express.Router()
-const movieModel = require("../models/movieModel")
+const movieModel = require("../models/movieModel");
+const yearModel = require("../models/yearModel");
 
 route.post("/add",async(req, res)=>{
     const movie = req.body;
@@ -14,6 +15,13 @@ route.post("/add",async(req, res)=>{
         }
         else
         {
+            const date = new Date(movie.releaseDate)
+            const releaseYear=date.getFullYear()
+            const checkYear= await yearModel.findOne({year:releaseYear})
+            if(!checkYear)
+            {
+                await yearModel.create({year:releaseYear})
+            }
             const addMovie = await movieModel.create({
                 imageUrl:movie.imageUrl,
                 movieName:movie.movieName,
@@ -47,6 +55,24 @@ route.get("/list",async(req, res)=>{
         }
     } catch (error) {
         console.log(error)
+    }
+})
+
+route.get("/year",async(req, res)=>{
+    try {
+        const year= await yearModel.find()
+        if(year)
+        {
+            return res.json(year)
+        }
+        else
+        {
+            return res.json({
+                message:"No year present"
+            })
+        }
+    } catch (error) {
+        
     }
 })
 

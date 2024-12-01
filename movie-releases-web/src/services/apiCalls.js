@@ -14,4 +14,8 @@ const getMovieList=()=>{
     return axios.get(`${api}/movie/list`);
 }
 
-export {loginDetails, addNewMovie, getMovieList}
+const getMovieYear =()=>{
+    return axios.get(`${api}/movie/year`)
+}
+
+export {loginDetails, addNewMovie, getMovieList, getMovieYear}
