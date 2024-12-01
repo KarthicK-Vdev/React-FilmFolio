@@ -11,9 +11,11 @@ app.use(cors())
 const db = require("./config")
 
 const adminRoutes = require("./routes/adminRoutes")
+const movieRoutes=require("./routes/movieRoutes")
 
 
 app.use("/admin",adminRoutes)
+app.use("/movie",movieRoutes)
 
 app.use("/test",(req, res)=>{
     res.json("Server is working")

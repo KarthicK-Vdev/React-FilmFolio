@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MovieData } from '../Data/MovieData';
+import { getMovieList } from '../services/apiCalls';
 
 const MovieList = ({month}) => {
   const convertDate = (releaseDate) => {
@@ -11,8 +12,17 @@ const MovieList = ({month}) => {
     });
     return formattedDate;
   };
+  const[movieList, setMovieList] = useState([])
 
-  const monthMovies=MovieData.filter((movie)=>{
+  useEffect(()=>{
+      const fetchMovies=async()=>{
+        const {data}= await getMovieList();
+        setMovieList(data)
+      }
+      fetchMovies()
+  },[])
+
+  const monthMovies=movieList.filter((movie)=>{
     const date= new Date(movie.releaseDate)
     return date.getMonth()===month
   })
@@ -33,10 +43,10 @@ const MovieList = ({month}) => {
             className="min-w-[250px] max-w-[250px] border border-gray-300 rounded-lg shadow-lg flex flex-col items-center bg-white"
           >
             <div className="h-[200px] w-full overflow-hidden rounded-t-lg">
-              <img src={data.imageUrl} alt={data.name} className="h-full w-full object-cover" />
+              <img src={data.imageUrl} alt={data.movieName} className="h-full w-full object-cover" />
             </div>
             <div className="p-4 flex flex-col items-center">
-              <h1 className="text-xl font-semibold text-center">{data.name}</h1>
+              <h1 className="text-xl font-semibold text-center">{data.movieName}</h1>
               <h2 className="text-gray-500">Release Date: {convertDate(data.releaseDate)}</h2>
             </div>
           </div>

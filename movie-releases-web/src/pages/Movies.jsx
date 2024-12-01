@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import MovieList from '../components/MovieList'
 import { RiFolderCloseLine } from "react-icons/ri";
+import {addNewMovie} from "../services/apiCalls"
 
 const Movies = () => {
   const month=[1,2,3,4,5,6,7,8,9,10,11,12];
@@ -8,10 +9,32 @@ const Movies = () => {
   const [releaseDate, setReleaseDate] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
+  const imageUrl=useRef()
+  const movieName=useRef()
+  const description=useRef()
+  const actors=useRef()
+  const director=useRef()
+
+  const handleMovieData = async(e) =>{
+      e.preventDefault()
+      const actorArray=actors.current.value.split(",").map((actor)=>actor.trim());
+      try {
+        const response = await addNewMovie(imageUrl.current.value,movieName.current.value, releaseDate, description.current.value, actorArray, director.current.value)
+        if(response.data)
+        {
+          console.log(response.data)
+        }
+        
+      } catch (error) {
+        console.log(error)
+      }
+  }
+  
+
   const handleDateChange = (event) => {
-    const date = event.target.value ? new Date(event.target.value) : null;
-    setReleaseDate(date);
-  };
+    const dateValue = event.target.value; // In YYYY-MM-DD format
+    setReleaseDate(dateValue);
+};
 
   return (
     <>
@@ -31,32 +54,35 @@ const Movies = () => {
     {
       addMovie && (
         <div className='h-screen w-screen absolute top-0 left-0 bg-black/20 flex justify-center items-center z-50'>
-          <div className='h-[70%] w-[30%] border-2 border-black bg-white flex flex-col justify-between items-center'>
+          <div className='h-[80%] w-[40%] border-2 border-black bg-white flex flex-col justify-between items-center'>
             <div className='h-[100%] w-[100%] flex flex-col justify-around items-center'>
             <div className='w-[80%] flex justify-between '>
               <div></div>
               <h1 className='h-[20%] font-bold text-2xl'>Add a Movie</h1>
               <RiFolderCloseLine onClick={()=>setAddMovie(!addMovie)} className='h-7' />
             </div>
-            <form className=' h-[60%] flex flex-col justify-around items-center '>
-            <input className='h-[15%] p-2 bg-yellow-100 border-b-2 border-yellow-500' type='text'  placeholder="Image Url" required></input>
-                <input className='h-[15%] p-2 bg-yellow-100 border-b-2 border-yellow-500' type='text'  placeholder="Name" required></input>
+            <form onSubmit={handleMovieData} className=' h-[80%] w-[100%] flex flex-col justify-around items-center '>
+            <input className='h-[10%] w-[60%] p-2 bg-yellow-100 border-b-2 border-yellow-500' type='text'  placeholder="Image Url" required ref={imageUrl}></input>
+                <input className='h-[10%] w-[60%] p-2 bg-yellow-100 border-b-2 border-yellow-500' type='text'  placeholder="Name" required ref={movieName}></input>
                 <input
-        className='h-[15%] p-2 bg-yellow-100 border-b-2 border-yellow-500'
-        type={isFocused || releaseDate ? 'date' : 'text'}
-        id="releaseDate"
-        name="releaseDate"
-        value={releaseDate instanceof Date ? releaseDate.toISOString().split('T')[0] : ''}
-        onChange={handleDateChange}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        placeholder="Release Date"
-        required
-      />
-                <input className='h-[15%] p-2 bg-yellow-100 border-b-2 border-yellow-500 ' type='password' placeholder="Description"
-                required
+            className="h-[10%] w-[60%] p-2 bg-yellow-100 border-b-2 border-yellow-500"
+            type={isFocused || releaseDate ? 'date' : 'text'}
+            id="releaseDate"
+            name="releaseDate"
+            value={releaseDate} // Already in YYYY-MM-DD format
+            onChange={handleDateChange}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder="Release Date"
+            required
+        />
+                <input className='h-[10%] w-[60%] p-2 bg-yellow-100 border-b-2 border-yellow-500 ' type='text' placeholder="Description"
+                required ref={description}
                 ></input>
-                <button className='h-[10%] border-2 border-yellow-400 text-yellow-400 px-5 bg-white rounded-md hover:bg-black transition duration-300 hover:border-none'>Add</button>
+                <input className='h-[10%] w-[60%] p-2 bg-yellow-100 border-b-2 border-yellow-500' type='text'  placeholder="Actors" required ref={actors}></input>
+                <input className='h-[10%] w-[60%] p-2 bg-yellow-100 border-b-2 border-yellow-500' type='text'  placeholder="Director" required ref={director}></input>
+
+                <button type="submit" className='h-[10%] border-2 border-yellow-400 text-yellow-400 px-5 bg-white rounded-md hover:bg-black transition duration-300 hover:border-none'>Add</button>
             </form>
             </div>
           </div>
