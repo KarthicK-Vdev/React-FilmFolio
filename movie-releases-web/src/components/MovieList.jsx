@@ -40,9 +40,9 @@ const MovieList = ({month, year}) => {
         {monthMovies.map((data, index) => (
           <div
             key={index}
-            className="min-w-[250px] max-w-[250px] border border-gray-300 rounded-lg shadow-lg flex flex-col items-center bg-white"
+            className="min-w-[300px] max-w-[300px] border border-gray-300 rounded-lg shadow-lg flex flex-col items-center bg-white"
           >
-            <div className="h-[200px] w-full overflow-hidden rounded-t-lg">
+            <div className="h-[220px] w-full overflow-hidden rounded-t-lg">
               <img src={data.imageUrl} alt={data.movieName} className="h-full w-full object-cover" />
             </div>
             <div className="p-4 flex flex-col items-center">

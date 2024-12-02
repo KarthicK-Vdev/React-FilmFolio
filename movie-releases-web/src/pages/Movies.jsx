@@ -4,6 +4,10 @@ import { RiFolderCloseLine } from "react-icons/ri";
 import {addNewMovie, getMovieYear} from "../services/apiCalls"
 
 const Movies = () => {
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+  ];
   const month=[1,2,3,4,5,6,7,8,9,10,11,12];
   const [addMovie, setAddMovie]=useState(false);
   const [releaseDate, setReleaseDate] = useState('');
@@ -22,9 +26,10 @@ const Movies = () => {
       const actorArray=actors.current.value.split(",").map((actor)=>actor.trim());
       try {
         const response = await addNewMovie(imageUrl.current.value,movieName.current.value, releaseDate, description.current.value, actorArray, director.current.value)
-        if(response.data)
+        if(response.data.message==="added movie")
         {
           console.log(response.data)
+          setAddMovie(!addMovie)
         }
         
       } catch (error) {
@@ -44,28 +49,33 @@ const Movies = () => {
     const dateValue = event.target.value; // In YYYY-MM-DD format
     setReleaseDate(dateValue);
 };
-  console.log(yearDisplay)
+  
   
   return (
     <>
-    <div className='h-full w-full overflow-y-scroll '>
-      <div className='m-2 h-[10%] flex justify-end'>
+    <div className='h-full w-full overflow-y-scroll flex flex-col items-center'>
+      <div className='m-2 h-[10%] w-[100%] flex justify-end'>
         <div className='h-[80%] w-[100%] flex items-center'>{
             movieYear.map((data, index)=>(
               <button key={index} onClick={()=>setYearDisplay(data.year)} className='h-[100%] w-[10%] flex items-center justify-center mr-4 border-2 bg-yellow-100 text-yellow-700 border-yellow-400 rounded-md text-center'>{data.year}</button> 
             ))
           }
         </div>
-        <button className='h-[80%] w-[25%] border-2 border-white bg-black text-yellow-400 font-bold text-lg rounded-md hover:bg-white hover:text-yellow-400 hover:border-yellow-400 transition duration-300' onClick={()=>setAddMovie(!addMovie)}>Add a Movie</button>
+        <button className='h-[100%] w-[25%] border-2 border-white bg-black text-yellow-400 font-bold text-lg rounded-md hover:bg-white hover:text-yellow-400 hover:border-yellow-400 transition duration-300' onClick={()=>setAddMovie(!addMovie)}>Add a Movie</button>
       </div>
-      {
-        month.map((data, index)=>(
-          <div key={index} className='flex flex-col'>
-            <h1>month: {data}</h1>
-            <MovieList month={data-1} year={yearDisplay} />
-          </div>
-        ))
-      }
+      <div className='h-[80%] w-[90%] flex flex-col justify-center'>
+        <div className='h-[100%]'>
+          {
+            month.map((data, index)=>(
+              <div key={index} className=' flex flex-col'>
+                <h1 className='font-semibold text-xl text-yellow-900'>{monthNames[data-1]}</h1>
+                <MovieList month={data-1} year={yearDisplay} />
+              </div>
+            ))
+          }
+
+        </div>
+      </div>
     </div>
     {
       addMovie && (

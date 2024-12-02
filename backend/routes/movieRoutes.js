@@ -72,7 +72,36 @@ route.get("/year",async(req, res)=>{
             })
         }
     } catch (error) {
-        
+        console.log(error)
+    }
+})
+
+route.get("/analytics",async(req, res)=>{
+    try {
+        const moviesByMonth = await movieModel.aggregate([
+            {
+                $group:{
+                    _id:{year:{$year:"$releaseDate"},month:{$month:"$releaseDate"}},
+                    movieCount:{$sum:1},
+                },
+            },
+            {
+                $sort:{"_id.year":1, "_id.month":1},
+            },
+        ])
+        console.log(moviesByMonth)
+        if(moviesByMonth)
+        {
+            return res.json(moviesByMonth)
+        }
+        else
+        {
+            return res.json({
+                message:"no movies"
+            })
+        }
+    } catch (error) {
+        console.log(error)
     }
 })
 
