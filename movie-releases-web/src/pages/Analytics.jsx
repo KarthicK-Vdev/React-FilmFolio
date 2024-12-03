@@ -9,6 +9,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import AreaGraph from '../components/AreaGraph';
+import BarGraph from '../components/BarGraph';
 
 const Analytics = () => {
   const [analyticData, setAnalyticData] = useState([]);
@@ -38,19 +40,18 @@ const Analytics = () => {
   console.log("formatted data"+formattedData);
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      {formattedData.length > 0 ? (
-        <AreaChart data={formattedData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
-          <YAxis />
-          <Tooltip />
-          <Area type="monotone" dataKey="movies" stroke="#8884d8" fill="#8884d8" />
-        </AreaChart>
-      ) : (
-        <div>Loading data...</div>
-      )}
-    </ResponsiveContainer>
+    <div className='h-full w-full flex flex-col justify-center items-center overflow-y-auto'>
+      <div className='h-[90%] w-[100%] flex flex-col items-center'>
+        <div className='w-[80%] h-full'>
+          <h1 className='text-xl font-semibold'>FilmFolio Analytics</h1>
+          <AreaGraph data={formattedData} />
+        </div>
+        <div className=' w-[80%]'>
+          <BarGraph year={2024}/>
+        </div>
+
+      </div>
+    </div>
   );
 };
 

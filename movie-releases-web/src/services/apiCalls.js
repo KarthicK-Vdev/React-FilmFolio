@@ -22,4 +22,8 @@ const getMovieAnalyticsData=()=>{
     return axios.get(`${api}/movie/analytics`)
 }
 
-export {loginDetails, addNewMovie, getMovieList, getMovieYear, getMovieAnalyticsData}
+const getMovieYearAnalyticsData=(year)=>{
+    return axios.get(`${api}/movie/analytics/${year}`)
+}
+
+export {loginDetails, addNewMovie, getMovieList, getMovieYear, getMovieAnalyticsData, getMovieYearAnalyticsData}
