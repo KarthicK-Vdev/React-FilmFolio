@@ -57,7 +57,18 @@ const Movies = () => {
       <div className='m-2 h-[10%] w-[100%] flex justify-end'>
         <div className='h-[80%] w-[100%] flex items-center'>{
             movieYear.map((data, index)=>(
-              <button key={index} onClick={()=>setYearDisplay(data.year)} className='h-[100%] w-[10%] flex items-center justify-center mr-4 border-2 bg-yellow-100 text-yellow-700 border-yellow-400 rounded-md text-center'>{data.year}</button> 
+              <button 
+  key={index} 
+  onClick={() => setYearDisplay(data.year)} 
+  className={`h-[80%] w-[20%] relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium rounded-lg group 
+    ${data.year === yearDisplay 
+      ? 'bg-white border border-yellow-500 text-black' 
+      : 'bg-gradient-to-br from-yellow-700 via-yellow-200 to-yellow-400 text-black group-hover:from-red-200 group-hover:via-red-300 group-hover:to-yellow-200  dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400'
+    }`}
+>
+  {data.year}
+</button>
+ 
             ))
           }
         </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { getMovieAnalyticsData } from '../services/apiCalls';
+import { getMovieAnalyticsData, getMovieYear } from '../services/apiCalls';
 import {
   AreaChart,
   Area,
@@ -14,6 +14,8 @@ import BarGraph from '../components/BarGraph';
 
 const Analytics = () => {
   const [analyticData, setAnalyticData] = useState([]);
+  const [movieYear, setMovieYear]=useState([])
+  const [year, setYear]=useState(2024)
 
   useEffect(() => {
     const fetchAnalyticData = async () => {
@@ -27,6 +29,14 @@ const Analytics = () => {
     };
     fetchAnalyticData();
   }, []);
+
+  useEffect(()=>{
+    const fetchMovieYear=async ()=>{
+      const {data}=await getMovieYear()
+      setMovieYear(data)
+    }
+    fetchMovieYear()
+  },[])
 
   const formattedData = useMemo(
     () =>
@@ -46,8 +56,25 @@ const Analytics = () => {
           <h1 className='text-xl font-semibold'>FilmFolio Analytics</h1>
           <AreaGraph data={formattedData} />
         </div>
-        <div className=' w-[80%]'>
-          <BarGraph year={2024}/>
+        <div className=' w-[80%] h-[70%] flex flex-col'>
+          <div className='h-[30%] w-full flex flex-col justify-between '>
+
+          <h1 className='text-xl h-[30%] font-semibold'>Year by stats</h1>
+          <div className='flex h-[60%] w-full'>
+            {
+              movieYear.map((data, index)=>(
+                <button key={index} onClick={()=>setYear(data.year)} className={`border-2 h-[90%] w-[20%] mr-4 ${data.year===year ? 'bg-white border-yellow-400 transition duration-300 rounded-lg' : 'border-yellow-600 bg-yellow-400'}`}>
+                  {data.year}
+                </button>
+              ))
+            }
+
+          </div>
+          </div>
+          <div className='h-[80%] w-[50%]'>
+            
+            <BarGraph year={year}/>
+          </div>
         </div>
 
       </div>

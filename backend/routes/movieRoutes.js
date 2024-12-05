@@ -122,8 +122,8 @@ route.get("/analytics", async (req, res) => {
 });
 
 const monthNames = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "Jan", "Feb", "Mar", "Apr", "May", "June",
+  "July", "Aug", "Sept", "Oct", "Nov", "Dec"
 ];
 
 route.get("/analytics/:year", async (req, res) => {
@@ -163,7 +163,7 @@ route.get("/analytics/:year", async (req, res) => {
         movieCount: found ? found.movieCount : 0,
       };
     });
-
+    // console.log(moviesByMonthMapped)
     return res.json(moviesByMonthMapped);
   } catch (error) {
     console.log(error);
