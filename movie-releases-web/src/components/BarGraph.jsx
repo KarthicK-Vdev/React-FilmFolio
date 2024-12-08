@@ -21,9 +21,9 @@ const BarGraph = ({year}) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
          dataKey="month" />
-        <YAxis />
+        <YAxis allowDecimals={false} />
         <Tooltip />
-        <Bar dataKey="movieCount" fill="#8884d8" />
+        <Bar dataKey="movieCount" fill="rgb(243, 215, 5)" />
       </BarChart>
     </ResponsiveContainer>
   )
