@@ -171,5 +171,57 @@ route.get("/analytics/:year", async (req, res) => {
   }
 });
 
+route.get("/analytics/actor/:name", async (req, res) => {
+  try {
+    const actorName = req.params.name;
+
+    // Group movies by year and count the number of movies for each year
+    const yearlyMovieReleases = await movieModel.aggregate([
+      {
+        $match: { actors: actorName }, // Match movies where the actor is listed
+      },
+      {
+        $group: {
+          _id: { year: { $year: "$releaseDate" } }, // Group by year
+          movieCount: { $sum: 1 }, // Count movies
+        },
+      },
+      {
+        $sort: { "_id.year": 1 }, // Sort by year
+      },
+    ]);
+
+    // Format the response
+    const formattedResponse = yearlyMovieReleases.map((data) => ({
+      year: data._id.year,
+      movieCount: data.movieCount,
+    }));
+
+    res.json(formattedResponse);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+route.get("/actors", async (req, res) => {
+  try {
+    const actors = await movieModel.aggregate([
+      { $unwind: "$actors" }, // Flatten the actors array
+      { $group: { _id: null, uniqueActors: { $addToSet: "$actors" } } } // Collect unique actors
+    ]);
+
+    if (actors.length > 0) {
+      res.json(actors[0].uniqueActors); // Send the array of unique actors
+    } else {
+      res.json([]); // Empty array if no actors found
+    }
+  } catch (error) {
+    console.error("Error fetching actors:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 
 module.exports = route
