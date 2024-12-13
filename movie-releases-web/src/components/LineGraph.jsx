@@ -6,7 +6,7 @@ const LineGraph = ({ actorName }) => {
   const [movieData, setMovieData] = useState([]);
   const [years, setYears] = useState([]);
 
-  // Fetch all years
+  
   useEffect(() => {
     const fetchingYear = async () => {
       try {

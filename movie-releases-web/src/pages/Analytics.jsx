@@ -18,8 +18,8 @@ const Analytics = () => {
   const [movieYear, setMovieYear]=useState([])
   const [year, setYear]=useState(2024)
 
-  const [actors, setActors] = useState([]); // List of actors for dropdown
-  const [selectedActor, setSelectedActor] = useState(""); // Selected actor
+  const [actors, setActors] = useState([]); 
+  const [selectedActor, setSelectedActor] = useState(""); 
 
   useEffect(() => {
     const fetchAnalyticData = async () => {
@@ -54,8 +54,9 @@ const Analytics = () => {
   useEffect(() => {
     const fetchActors = async () => {
       try {
-        const response = await getActorsList(); // Replace with your API endpoint
-        setActors(response.data);
+        const response = await getActorsList(); 
+        const sortedActors = response.data.sort()
+        setActors(sortedActors);
       } catch (error) {
         console.error("Error fetching actors:", error);
       }

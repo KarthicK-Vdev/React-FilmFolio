@@ -60,7 +60,7 @@ route.get("/list",async(req, res)=>{
 
 route.get("/year",async(req, res)=>{
     try {
-        const year= await yearModel.find()
+        const year= await yearModel.find().sort({year:1})
         if(year)
         {
             return res.json(year)
@@ -79,18 +79,16 @@ route.get("/year",async(req, res)=>{
 
 route.get("/analytics", async (req, res) => {
   try {
-    const yearStart = 2024; // Adjust based on the range you need
+    const yearStart = 2023; 
     const yearEnd = 2025;
 
-    // Generate all months for the required range
+    
     const allMonths = [];
     for (let year = yearStart; year <= yearEnd; year++) {
       for (let month = 1; month <= 12; month++) {
         allMonths.push({ year, month });
       }
     }
-
-    // Aggregate movie data
     const moviesByMonth = await movieModel.aggregate([
       {
         $group: {
@@ -103,7 +101,6 @@ route.get("/analytics", async (req, res) => {
       },
     ]);
 
-    // Map aggregated results into the complete month range
     const moviesByMonthMapped = allMonths.map((month) => {
       const found = moviesByMonth.find(
         (data) => data._id.year === month.year && data._id.month === month.month
@@ -163,7 +160,7 @@ route.get("/analytics/:year", async (req, res) => {
         movieCount: found ? found.movieCount : 0,
       };
     });
-    // console.log(moviesByMonthMapped)
+
     return res.json(moviesByMonthMapped);
   } catch (error) {
     console.log(error);
@@ -175,23 +172,22 @@ route.get("/analytics/actor/:name", async (req, res) => {
   try {
     const actorName = req.params.name;
 
-    // Group movies by year and count the number of movies for each year
+
     const yearlyMovieReleases = await movieModel.aggregate([
       {
-        $match: { actors: actorName }, // Match movies where the actor is listed
+        $match: { actors: actorName }, 
       },
       {
         $group: {
-          _id: { year: { $year: "$releaseDate" } }, // Group by year
-          movieCount: { $sum: 1 }, // Count movies
+          _id: { year: { $year: "$releaseDate" } }, 
+          movieCount: { $sum: 1 }, 
         },
       },
       {
-        $sort: { "_id.year": 1 }, // Sort by year
+        $sort: { "_id.year": 1 }, 
       },
     ]);
 
-    // Format the response
     const formattedResponse = yearlyMovieReleases.map((data) => ({
       year: data._id.year,
       movieCount: data.movieCount,
@@ -207,14 +203,14 @@ route.get("/analytics/actor/:name", async (req, res) => {
 route.get("/actors", async (req, res) => {
   try {
     const actors = await movieModel.aggregate([
-      { $unwind: "$actors" }, // Flatten the actors array
-      { $group: { _id: null, uniqueActors: { $addToSet: "$actors" } } } // Collect unique actors
+      { $unwind: "$actors" }, 
+      { $group: { _id: null, uniqueActors: { $addToSet: "$actors" } } } 
     ]);
 
     if (actors.length > 0) {
-      res.json(actors[0].uniqueActors); // Send the array of unique actors
+      res.json(actors[0].uniqueActors); 
     } else {
-      res.json([]); // Empty array if no actors found
+      res.json([]); 
     }
   } catch (error) {
     console.error("Error fetching actors:", error);
@@ -222,6 +218,26 @@ route.get("/actors", async (req, res) => {
   }
 });
 
-
+route.delete("/delete/:id",async(req, res)=>{
+  try {
+    const movieId=req.params.id
+    const deleteMovie= await movieModel.findByIdAndDelete(movieId)
+    console.log(deleteMovie)
+    if(deleteMovie)
+    {
+      return res.json({
+        message:"deleted movie successfully"
+      })
+    }
+    else
+    {
+      return res.json({
+        message:"no movie found"
+      })
+    }
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 module.exports = route

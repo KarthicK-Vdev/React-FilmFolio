@@ -34,4 +34,8 @@ const getActorsList=()=>{
     return axios.get(`${api}/movie/actors`)
 }
 
-export {loginDetails, addNewMovie, getMovieList, getMovieYear, getMovieAnalyticsData, getMovieYearAnalyticsData, getActorAnalyticDetails, getActorsList}
+const deleteAMovie=(id)=>{
+    return axios.delete(`${api}/movie/delete/${id}`)
+}
+
+export {loginDetails, addNewMovie, getMovieList, getMovieYear, getMovieAnalyticsData, getMovieYearAnalyticsData, getActorAnalyticDetails, getActorsList, deleteAMovie}

@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import MovieList from '../components/MovieList'
 import { RiFolderCloseLine } from "react-icons/ri";
 import {addNewMovie, getMovieYear} from "../services/apiCalls"
+import { useSelector } from 'react-redux';
 
 const Movies = () => {
+  const admin=useSelector((state)=>state.auth.admin)
   const monthNames = [
     "January", "February", "March", "April", "May", "June", 
     "July", "August", "September", "October", "November", "December"
@@ -72,7 +74,11 @@ const Movies = () => {
             ))
           }
         </div>
-        <button className='h-[100%] w-[25%] border-2 border-white bg-black text-yellow-400 font-bold text-lg rounded-md hover:bg-white hover:text-yellow-400 hover:border-yellow-400 transition duration-300' onClick={()=>setAddMovie(!addMovie)}>Add a Movie</button>
+        {
+          admin && (
+            <button className='h-[100%] w-[25%] border-2 border-white bg-black text-yellow-400 font-bold text-lg rounded-md hover:bg-white hover:text-yellow-400 hover:border-yellow-400 transition duration-300' onClick={()=>setAddMovie(!addMovie)}>Add a Movie</button>
+          )
+        }
       </div>
       <div className='h-[80%] w-[90%] flex flex-col justify-center'>
         <div className='h-[100%]'>

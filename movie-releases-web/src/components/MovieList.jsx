@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { MovieData } from '../Data/MovieData';
-import { getMovieList } from '../services/apiCalls';
+import { deleteAMovie, getMovieList } from '../services/apiCalls';
+import { FaTrashAlt } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
+import { useSelector } from 'react-redux';
 
 const MovieList = ({month, year}) => {
+  const admin = useSelector((state)=>state.auth.admin)
   const convertDate = (releaseDate) => {
     const date = new Date(releaseDate);
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -12,6 +16,14 @@ const MovieList = ({month, year}) => {
     });
     return formattedDate;
   };
+  const deleteHanlder=async(id)=>{
+    try {
+      const response= await deleteAMovie(id)
+      console.log(response.data);
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const[movieList, setMovieList] = useState([])
 
   useEffect(()=>{
@@ -20,7 +32,7 @@ const MovieList = ({month, year}) => {
         setMovieList(data)
       }
       fetchMovies()
-  },[])
+  },[deleteHanlder])
 
   const monthMovies=movieList.filter((movie)=>{
     const date= new Date(movie.releaseDate)
@@ -34,6 +46,9 @@ const MovieList = ({month, year}) => {
         </div>
     )
   }
+  
+  console.log("test")
+  console.log(monthMovies)
   return (
     <div className="h-full w-full flex flex-col  items-center">
       <div className="h-[60%] w-[90%] flex flex-row overflow-x-auto space-x-4 py-4">
@@ -42,6 +57,15 @@ const MovieList = ({month, year}) => {
             key={index}
             className="min-w-[300px] max-w-[300px] border border-gray-300 rounded-lg shadow-lg flex flex-col items-center bg-white"
           >
+            <div className='h-[40px] w-full flex justify-center items-center'>
+              { admin && (
+                <div className='h-[80%] w-[80%] flex justify-between items-center'>
+                  <FaEdit className='text-lime-600 text-2xl'/>
+                  <FaTrashAlt className='text-red-600 text-2xl cursor-pointer' onClick={()=>deleteHanlder(data._id)} />
+                </div>
+              )
+              }
+              </div>
             <div className="h-[220px] w-full overflow-hidden rounded-t-lg">
               <img src={data.imageUrl} alt={data.movieName} className="h-full w-full object-cover" />
             </div>
