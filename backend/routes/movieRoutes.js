@@ -240,4 +240,27 @@ route.delete("/delete/:id",async(req, res)=>{
   }
 })
 
+route.put("/edit/:id", async(req, res)=>{
+  const id=req.params.id
+  const {imageUrl, movieName, releaseDate, description, actors, director}=req.body
+  try {
+    const updatedMovie=await movieModel.findByIdAndUpdate(id, {imageUrl, movieName, releaseDate, description, actors, director}, {new: true})
+    
+    if(updatedMovie)
+    {
+      return res.json({
+        message:"Updated movie successfully"
+      })
+    }
+    else
+    {
+      return res.json({
+        message:"movie not found"
+      })
+    }
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 module.exports = route

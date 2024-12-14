@@ -4,9 +4,15 @@ import { deleteAMovie, getMovieList } from '../services/apiCalls';
 import { FaTrashAlt } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { useSelector } from 'react-redux';
+import { RiFolderCloseLine } from 'react-icons/ri';
+import EditMovie from './EditMovie';
 
 const MovieList = ({month, year}) => {
   const admin = useSelector((state)=>state.auth.admin)
+
+  const [editMovieDetails, setEditMovieDetails]=useState({})
+  
+  const[editMovie, setEditMovie]=useState(false)
   const convertDate = (releaseDate) => {
     const date = new Date(releaseDate);
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -38,6 +44,14 @@ const MovieList = ({month, year}) => {
     const date= new Date(movie.releaseDate)
     return date.getMonth()===month && date.getFullYear()===year
   })
+
+  const editHandler=(data)=>{
+    setEditMovieDetails(data)
+    setEditMovie(true)
+  }
+  const removeEditHandler=()=>{
+    setEditMovie(false)
+  }
   if(monthMovies.length==0)
   {
     return(
@@ -50,6 +64,7 @@ const MovieList = ({month, year}) => {
   console.log("test")
   console.log(monthMovies)
   return (
+    <>
     <div className="h-full w-full flex flex-col  items-center">
       <div className="h-[60%] w-[90%] flex flex-row overflow-x-auto space-x-4 py-4">
         {monthMovies.map((data, index) => (
@@ -60,7 +75,7 @@ const MovieList = ({month, year}) => {
             <div className='h-[40px] w-full flex justify-center items-center'>
               { admin && (
                 <div className='h-[80%] w-[80%] flex justify-between items-center'>
-                  <FaEdit className='text-lime-600 text-2xl'/>
+                  <FaEdit className='text-lime-600 text-2xl' onClick={()=>editHandler(data)}/>
                   <FaTrashAlt className='text-red-600 text-2xl cursor-pointer' onClick={()=>deleteHanlder(data._id)} />
                 </div>
               )
@@ -77,6 +92,12 @@ const MovieList = ({month, year}) => {
         ))}
       </div>
     </div>
+    {
+      editMovie && (
+        <EditMovie movie={editMovieDetails} removeEdit={removeEditHandler} />
+      )
+    }
+    </>
   );
 };
 

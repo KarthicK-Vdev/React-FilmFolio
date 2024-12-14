@@ -38,4 +38,8 @@ const deleteAMovie=(id)=>{
     return axios.delete(`${api}/movie/delete/${id}`)
 }
 
-export {loginDetails, addNewMovie, getMovieList, getMovieYear, getMovieAnalyticsData, getMovieYearAnalyticsData, getActorAnalyticDetails, getActorsList, deleteAMovie}
+const updateMovie=(id, editedMovie)=>{
+    return axios.put(`${api}/movie/edit/${id}`,editedMovie)
+}
+
+export {loginDetails, addNewMovie, getMovieList, getMovieYear, getMovieAnalyticsData, getMovieYearAnalyticsData, getActorAnalyticDetails, getActorsList, deleteAMovie, updateMovie}
