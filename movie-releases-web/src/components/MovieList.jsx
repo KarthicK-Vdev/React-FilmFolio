@@ -72,15 +72,15 @@ const MovieList = ({month, year}) => {
             key={index}
             className="min-w-[300px] max-w-[300px] border border-gray-300 rounded-lg shadow-lg flex flex-col items-center bg-white"
           >
-            <div className='h-[40px] w-full flex justify-center items-center'>
               { admin && (
+                  <div className='h-[40px] w-full flex justify-center items-center'>
                 <div className='h-[80%] w-[80%] flex justify-between items-center'>
                   <FaEdit className='text-lime-600 text-2xl' onClick={()=>editHandler(data)}/>
                   <FaTrashAlt className='text-red-600 text-2xl cursor-pointer' onClick={()=>deleteHanlder(data._id)} />
                 </div>
+              </div>
               )
               }
-              </div>
             <div className="h-[220px] w-full overflow-hidden rounded-t-lg">
               <img src={data.imageUrl} alt={data.movieName} className="h-full w-full object-cover" />
             </div>
